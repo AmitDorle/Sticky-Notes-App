@@ -7,3 +7,25 @@
     padding: 10px;
     font-family: 'Times New Roman', Times, serif;
 }
+.main-notes-container
+{
+    display: flex;
+    justify-content: space-evenly;
+}
+.notes-container
+{
+    height: 380px;
+    border-radius: 10px;
+    background-color: brown;
+    margin: 10px;
+    width: 700px;
+}
+
+.add-note-container
+{
+    height: 380px;
+    border-radius: 10px;
+    background-color: brown;
+    margin: 10px;
+    width: 700px;
+}
