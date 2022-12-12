@@ -1,49 +1,103 @@
-import React from 'react'
-import { useState , useEffect } from 'react'
-import './Home.css'
+import React, { useState, useEffect } from 'react'
+import swal from 'sweetalert';
+
+import "./Home.css"
+
+import Note from '../../components/Note/Note';
 
 function Home() {
 
-    const [notes , setNotes] = useState([
-        {
-            title : "note 1",
-            contents : "this is the content of note 1"
-        },
-        {
-            title : "note 2",
-            contents : "this is the content of note 2"
-        },
-        {
-            title : "note 3",
-            contents : "this is the content of note 3"
-        },
-        {
-            title : "note 4",
-            contents : "this is the content of note 4"
-        }
-    ])
+  const [notes, setNotes] = useState([
+    {
+      title: "Note",
+      content: "You can add more notes to this list"
+    }
+  ])
 
+  // triggers initially
+  useEffect(() => {
+    const notes = localStorage.getItem("notes")
+    if (notes) {
+      setNotes(JSON.parse(notes))
+    }
+  }, [])
+
+  // triggers when notes changes
+  useEffect(() => {
+    if (notes.length > 1) {
+      localStorage.setItem("notes", JSON.stringify(notes))
+    }
+  }, [notes])
+
+  const [title, setTitle] = useState("")
+  const [content, setContent] = useState("")
+
+  function addNote() {
+    const newNote = {
+      "title": title,
+      "content": content
+    }
+
+    // const temp = notes;
+    // temp.push(newNote)
+    // setNotes(temp);
+
+    if (title === "" || content === "") {
+      swal({
+        title: "Error",
+        text: "Please fill all the fields",
+        icon: "error",
+      })
+      return;
+    }
+
+    setNotes([...notes, newNote])
+
+    swal({
+      title: "Note Added",
+      text: "Your note has been added to the list",
+      icon: "success",
+    })
+
+    setTitle("")
+    setContent("")
+  }
 
   return (
     <div>
-        <div className='main-head-container'>
-            <h1>My Notes</h1>
+      <div className='app-title-container shadow-sm'>
+        <h1 className='app-title'>📝 Sticky Notes </h1>
+      </div>
+      <div className='row'>
+        <div className='col-md-6 '>
+          <div className='notes-container  p-2'>
+            {
+              notes.map((note, index) => {
+                return (<Note title={note.title} content={note.content} noteIndex={index} />)
+              })
+            }
+          </div>
         </div>
-        <div className='main-notes-container'>
-            <div className='notes-container col-lg-6 col-sm-12'>
-                {
-                    notes.map((note)=>{
-                        return
-                        {
-                            
-                        }
-                    })
-                }
-            </div>
-            <div className='add-note-container col-lg-6 col-sm-12'>
 
-            </div>
+        <div className='col-md-6'>
+          <div className='note-editor-container p-2'>
+            <h3 className='text-center'>Add Note</h3>
+            <form>
+              <div className=''>
+                <input type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} className="form-control mt-4" placeholder="Note Title" />
+              </div>
+              <div>
+                <input type="text" value={content} onChange={(e) => { setContent(e.target.value) }} className="form-control mt-4" placeholder="Note Description" />
+              </div>
+              <div className='add-note-button-container'>
+                <button type="button" className="btn btn-primary mt-4" onClick={addNote}>Add Note</button>
+              </div>
+            </form>
+          </div>
         </div>
+
+        
+      </div>
     </div>
   )
 }
